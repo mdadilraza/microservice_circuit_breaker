@@ -1,0 +1,68 @@
+server:
+  port: 8084
+feign:
+  circuitbreaker:
+    enabled: true
+
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+        retryer: feign.Retryer.Default
+
+#resilience4j:
+#  circuitbreaker:
+#    instances:
+#      productService:
+#        registerHealthIndicator: true
+#        eventConsumerBufferSize: 10
+#        failureRateThreshold: 50
+#        minimumNumberOfCalls: 1
+#        automaticTransitionFromOpenToHalfOpenEnabled: true
+##        slowCallRateThreshold: 50
+##        slowCallDurationThreshold: 2s
+#        waitDurationInOpenState: 6s
+#        permittedNumberOfCallsInHalfOpenState: 3
+#        slidingWindowSize: 10
+#        slidingWindowType: COUNT_BASED
+#      ratingService:
+#        registerHealthIndicator: true
+#        eventConsumerBufferSize: 10
+#        failureRateThreshold: 50
+#        minimumNumberOfCalls: 1
+#        automaticTransitionFromOpenToHalfOpenEnabled: true
+#        #        slowCallRateThreshold: 50
+#        #        slowCallDurationThreshold: 2s
+#        waitDurationInOpenState: 6s
+#        permittedNumberOfCallsInHalfOpenState: 3
+#        slidingWindowSize: 10
+#        slidingWindowType: COUNT_BASED
+#      priceService:
+#        registerHealthIndicator: true
+#        eventConsumerBufferSize: 10
+#        failureRateThreshold: 50
+#        minimumNumberOfCalls: 1
+#        automaticTransitionFromOpenToHalfOpenEnabled: true
+#        #        slowCallRateThreshold: 50
+#        #        slowCallDurationThreshold: 2s
+#        waitDurationInOpenState: 6s
+#        permittedNumberOfCallsInHalfOpenState: 3
+#        slidingWindowSize: 10
+#        slidingWindowType: COUNT_BASED
+
+#logging:
+#  level:
+#    root: INFO
+#    io.github.resilience4j: DEBUG
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+    endpoints:
+      web:
+        exposure:
+          include: health
+    endpoint:
+      health:
+        show-details: always
