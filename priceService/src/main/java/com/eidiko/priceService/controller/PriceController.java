@@ -1,5 +1,4 @@
 package com.eidiko.priceService.controller;
-
 import com.eidiko.priceService.entity.Price;
 import com.eidiko.priceService.service.PriceService;
 import lombok.AllArgsConstructor;

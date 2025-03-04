@@ -143,35 +143,36 @@ public class ProductAggregationServiceImpl implements ProductAggregationService 
 
     // ---------------- Circuit Breaker Protected Methods ----------------
 
-   // @CircuitBreaker(name = "productService", fallbackMethod = "productFallback")
+    //@CircuitBreaker(name = "productService", fallbackMethod = "productFallback")
     public ProductDto getProductById(Long productId) {
         return productClient.getProductById(productId);
     }
 
    // @CircuitBreaker(name = "ratingService", fallbackMethod = "ratingFallback")
     public List<RatingDto> getRatingsByProduct(Long productId) {
-        return ratingClient.getRatingsByProduct(productId);
+        return ratingClient.getRatingByProductId(productId).getBody();
     }
 
    // @CircuitBreaker(name = "priceService", fallbackMethod = "priceFallback")
     public PriceDto getPriceByProductId(Long productId) {
+
         return priceClient.getPriceByProductId(productId);
     }
 
     // ---------------- Fallback Methods ----------------
 
-//    private ProductDto productFallback(Long productId, Throwable ex) {
-//        log.error("Product service is down! Returning default product.", ex);
-//        return new ProductDto(productId, "Unknown Product", "No Description");
-//    }
-//
-//    private List<RatingDto> ratingFallback(Long productId, Throwable ex) {
-//        log.error("Rating service is down! Returning empty rating list.", ex);
-//        return Collections.emptyList();
-//    }
-//
-//    private PriceDto priceFallback(Long productId, Throwable ex) {
-//        log.error("Price service is down! Returning default price.", ex);
-//        return new PriceDto(productId, 0.0, "INR");
-//    }
+    private ProductDto productFallback(Long productId, Throwable ex) {
+        log.error("Product service is down! Returning default product.", ex);
+        return new ProductDto(productId, "Unknown Product", "No Description");
+    }
+
+    private List<RatingDto> ratingFallback(Long productId, Throwable ex) {
+        log.error("Rating service is down! Returning empty rating list.", ex);
+        return Collections.emptyList();
+    }
+
+    private PriceDto priceFallback(Long productId, Throwable ex) {
+        log.error("Price service is down! Returning default price.", ex);
+        return new PriceDto(productId, 0.0, "INR");
+    }
 }

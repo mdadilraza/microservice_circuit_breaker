@@ -1,6 +1,6 @@
 spring:
   application:
-    name: price_service
+    name: PRICE-SERVICE
   datasource:
     url: jdbc:mysql://localhost:3306/price_service
     username: root
@@ -11,14 +11,18 @@ spring:
     show-sql: true
 server:
   port: 8083
-management:
-  health:
-    circuitbreakers:
-      enabled: true
-    endpoints:
-      web:
-        exposure:
-          include: health
-    endpoint:
-      health:
-        show-details: always
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+#management:
+#  health:
+#    circuitbreakers:
+#      enabled: true
+#    endpoints:
+#      web:
+#        exposure:
+#          include: health
+#    endpoint:
+#      health:
+#        show-details: always

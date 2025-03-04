@@ -6,7 +6,9 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient(name = "price-service", url = "http://localhost:8083/api/price" ,fallbackFactory = PriceClientFallbackFactory.class)
+@FeignClient(name = "price-service", url = "http://localhost:8083/api/price"
+        ,fallbackFactory = PriceClientFallbackFactory.class
+  )
 public interface PriceClient {
     @GetMapping("{id}")
     PriceDto getPriceByProductId(@PathVariable Long id);

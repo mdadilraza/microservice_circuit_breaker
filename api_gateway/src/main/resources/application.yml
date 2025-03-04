@@ -1,0 +1,158 @@
+server:
+  port: 8085
+
+spring:
+  application:
+    name: API-GATEWAY
+
+  cloud:
+    gateway:
+      routes:
+        - id: product-service-route
+          uri: lb://PRODUCT-SERVICE
+          predicates:
+            - Path=/api/products/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: productServiceCircuitBreaker
+                fallbackUri: forward:/fallback/product
+
+        - id: integration-service-route
+          uri: lb://INTEGRATION-SERVICE
+          predicates:
+            - Path=/api/integration/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: integrationServiceCircuitBreaker
+                fallbackUri: forward:/fallback/integration
+
+        - id: rating-service-route
+          uri: lb://RATING-SERVICE
+          predicates:
+            - Path=/api/ratings/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: ratingServiceCircuitBreaker
+                fallbackUri: forward:/fallback/rating
+
+        - id: price-service-route
+          uri: lb://PRICE-SERVICE
+          predicates:
+            - Path=/api/price/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: priceServiceCircuitBreaker
+                fallbackUri: forward:/fallback/price
+
+      httpclient:
+        connect-timeout: 10000       # 10 seconds to establish connection
+        response-timeout: 30s        # 30 seconds to wait for response
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    fetch-registry: true
+    register-with-eureka: true
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      productServiceCircuitBreaker:
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        failureRateThreshold: 50
+        slowCallRateThreshold: 60
+        slowCallDurationThreshold: 10s
+        permittedNumberOfCallsInHalfOpenState: 3
+        waitDurationInOpenState: 15s
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        registerHealthIndicator: true
+        ignoreExceptions:
+          - java.io.IOException
+          - java.util.concurrent.TimeoutException
+          - org.springframework.web.client.HttpServerErrorException
+
+      ratingServiceCircuitBreaker:
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        failureRateThreshold: 50
+        slowCallRateThreshold: 60
+        slowCallDurationThreshold: 10s
+        permittedNumberOfCallsInHalfOpenState: 3
+        waitDurationInOpenState: 15s
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        registerHealthIndicator: true
+        ignoreExceptions:
+          - java.io.IOException
+          - java.util.concurrent.TimeoutException
+          - org.springframework.web.client.HttpServerErrorException
+
+      priceServiceCircuitBreaker:
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        failureRateThreshold: 50
+        slowCallRateThreshold: 60
+        slowCallDurationThreshold: 10s
+        permittedNumberOfCallsInHalfOpenState: 3
+        waitDurationInOpenState: 15s
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        registerHealthIndicator: true
+        ignoreExceptions:
+          - java.io.IOException
+          - java.util.concurrent.TimeoutException
+          - org.springframework.web.client.HttpServerErrorException
+
+      integrationServiceCircuitBreaker:
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        failureRateThreshold: 50
+        slowCallRateThreshold: 60
+        slowCallDurationThreshold: 10s
+        permittedNumberOfCallsInHalfOpenState: 3
+        waitDurationInOpenState: 15s
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        registerHealthIndicator: true
+        ignoreExceptions:
+          - java.io.IOException
+          - java.util.concurrent.TimeoutException
+          - org.springframework.web.client.HttpServerErrorException
+
+  timelimiter:
+    instances:
+      productServiceCircuitBreaker:
+        timeoutDuration: 10s
+      ratingServiceCircuitBreaker:
+        timeoutDuration: 10s
+      priceServiceCircuitBreaker:
+        timeoutDuration: 10s
+      integrationServiceCircuitBreaker:           # ✅ Added this (was missing)
+        timeoutDuration: 10s
+
+logging:
+  level:
+    root: INFO
+    org.springframework.cloud.gateway: DEBUG
+    io.github.resilience4j.circuitbreaker: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,circuitbreakers
+  endpoint:
+    health:
+      show-details: always
+    circuitbreakers:
+      enabled: true
+  health:
+    circuitbreakers:
+      enabled: true

@@ -13,6 +13,11 @@ public class PriceServiceImpl implements PriceService{
 
     @Override
     public Price getPriceByProductId(long id) {
+        try {
+            Thread.sleep(1000*5);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         return priceRepository.findByProductId(id);
     }
 }

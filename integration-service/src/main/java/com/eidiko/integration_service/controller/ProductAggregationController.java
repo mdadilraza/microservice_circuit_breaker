@@ -1,4 +1,5 @@
 package com.eidiko.integration_service.controller;
+
 import com.eidiko.integration_service.client.PriceClient;
 import com.eidiko.integration_service.client.RatingClient;
 import com.eidiko.integration_service.dto.PriceDto;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/products")
+@RequestMapping("/api/integration")
 
 public class ProductAggregationController {
     private final ProductAggregationService aggregationService;
@@ -35,13 +36,14 @@ public class ProductAggregationController {
 
     //http://localhost:8084/products/getRating/1
     @GetMapping("/getRating/{id}")
-    public ResponseEntity<List<RatingDto>> getRating(@PathVariable long id){
-        List<RatingDto> ratingsByProduct = ratingClient.getRatingsByProduct(id);
-        return ResponseEntity.ok(ratingsByProduct);
+    public ResponseEntity<List<RatingDto>> getRating(@PathVariable long id) {
+        ResponseEntity<List<RatingDto>> ratingsByProduct = ratingClient.getRatingByProductId(id);
+        return ratingsByProduct;
     }
+
     //http://localhost:8084/products/getPrice/1
     @GetMapping("/getPrice/{id}")
-    public ResponseEntity<PriceDto>getPrice(@PathVariable long id){
+    public ResponseEntity<PriceDto> getPrice(@PathVariable long id) {
         PriceDto priceByProductId = priceClient.getPriceByProductId(id);
         return ResponseEntity.ok(priceByProductId);
     }

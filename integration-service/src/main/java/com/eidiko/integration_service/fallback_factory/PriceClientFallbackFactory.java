@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 public class PriceClientFallbackFactory implements FallbackFactory<PriceClient> {
     @Override
     public PriceClient create(Throwable cause) {
-        log.error("Product service is down. Reason: {}", cause.getMessage());
+        log.error("Price  service is down. Reason: {}", cause.getMessage());
         return new PriceClient() {
             @Override
             public PriceDto getPriceByProductId(Long productId) {

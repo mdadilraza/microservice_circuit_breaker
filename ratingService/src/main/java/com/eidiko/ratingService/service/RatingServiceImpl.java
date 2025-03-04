@@ -12,7 +12,9 @@ import java.util.List;
 public class RatingServiceImpl implements RatingService{
     private final RatingRepository ratingRepository;
     @Override
-    public List<Rating> getRatingByProductId(long id) {
+    public List<Rating> getRatingByProductId(long id)
+    {
+
         return ratingRepository.findByProductId(id);
     }
 }
